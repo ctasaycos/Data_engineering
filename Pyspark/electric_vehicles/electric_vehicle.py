@@ -26,7 +26,7 @@ import os
 
 
 #Configuration of spark session, take in account that this is running on a Windows machine.
-#In mac os x and linus most likely this configuration must be changed
+#In mac os x and linux most likely this configuration must be changed
 os.environ["HADOOP_HOME"] = "file:///C:/hadoop/bin/"
 spark = SparkSession.builder \
     .appName("YourAppName") \
