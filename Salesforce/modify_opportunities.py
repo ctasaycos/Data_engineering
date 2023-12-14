@@ -1,3 +1,6 @@
+'''
+Add the online amount of the opportunity of the website, salesforce is not connected with the ecommerce tool (google analytics), massive updates in opportunities are need to do.
+'''
 import pandas as pd
 from simple_salesforce import Salesforce
 sf = Salesforce(username='user', password='password', security_token='token',domain='test')
