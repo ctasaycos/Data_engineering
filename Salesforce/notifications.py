@@ -15,56 +15,56 @@ sf = Salesforce(
 )
 
 # Querying Account data from Salesforce
-TM_Account_output = sf.bulk.Account.query("SELECT Id, Name, Sector_1__c, Industria_1__c, Clasificacion_de_la_Cuenta__c, OwnerId, Check_cc_manual__c FROM Account")
-TM_Account_bought = pd.DataFrame(TM_Account_output, columns=['Id', 'Name', 'Sector_1__c', 'Industria_1__c', 'Clasificacion_de_la_Cuenta__c', 'OwnerId', 'Check_cc_manual__c'])
+ob_Account_output = sf.bulk.Account.query("SELECT Id, Name, Sector_1__c, Industria_1__c, Clasificacion_de_la_Cuenta__c, OwnerId, Check_cc_manual__c FROM Account")
+ob_Account_bought = pd.DataFrame(ob_Account_output, columns=['Id', 'Name', 'Sector_1__c', 'Industria_1__c', 'Clasificacion_de_la_Cuenta__c', 'OwnerId', 'Check_cc_manual__c'])
 
 # Querying User data from Salesforce
-TM_User_output = sf.bulk.User.query("SELECT Id, Name FROM User")
-TM_User_bought = pd.DataFrame(TM_User_output, columns=['Id', 'Name'])
+ob_User_output = sf.bulk.User.query("SELECT Id, Name FROM User")
+ob_User_bought = pd.DataFrame(ob_User_output, columns=['Id', 'Name'])
 
 # Querying Case data from Salesforce
-TM_Case_output = sf.bulk.Case.query("SELECT Id, CreatedDate, AccountId, Type, Status, Origin, Campana_CxE__c, Tags_de_Interes__c FROM Case")
-TM_Case_bought = pd.DataFrame(TM_Case_output, columns=['Id', 'CreatedDate', 'AccountId', 'Type', 'Status', 'Origin', 'Campana_CxE__c', 'Tags_de_Interes__c'])
+ob_Case_output = sf.bulk.Case.query("SELECT Id, CreatedDate, AccountId, Type, Status, Origin, Campana_CxE__c, Tags_de_Interes__c FROM Case")
+ob_Case_bought = pd.DataFrame(ob_Case_output, columns=['Id', 'CreatedDate', 'AccountId', 'Type', 'Status', 'Origin', 'Campana_CxE__c', 'Tags_de_Interes__c'])
 
 # Joining Account and User data
-TM_Account_bought_0 = pd.merge(TM_Account_bought, TM_User_bought, left_on='OwnerId', right_on='Id', how='left')
-TM_Account_bought_0.rename(columns={'Name_y': 'Propietario_cuenta'}, inplace=True)
-TM_Account_bought_0.drop('Id_y', axis=1, inplace=True)
+ob_Account_bought_0 = pd.merge(ob_Account_bought, ob_User_bought, left_on='OwnerId', right_on='Id', how='left')
+ob_Account_bought_0.rename(columns={'Name_y': 'Propietario_cuenta'}, inplace=True)
+ob_Account_bought_0.drop('Id_y', axis=1, inplace=True)
 
 # Calculating interactions and supports
-df_case_account = TM_Case_bought.query("AccountId != 'None' and Campana_CxE__c == 'Customer Success'").groupby('AccountId').size().reset_index(name='q_interacciones_cs')
-df_soporte_account = TM_Case_bought.query("AccountId != 'None' and Tags_de_Interes__c == 'Registro en DDX-ESRI'").groupby('AccountId').size().reset_index(name='q_soportes_cs')
+df_case_account = ob_Case_bought.query("AccountId != 'None' and Campana_CxE__c == 'Customer Success'").groupby('AccountId').size().reset_index(name='q_interacciones_cs')
+df_soporte_account = ob_Case_bought.query("AccountId != 'None' and Tags_de_Interes__c == 'Registro en DDX-ESRI'").groupby('AccountId').size().reset_index(name='q_soportes_cs')
 
 # Querying Opportunity data from Salesforce
-TM_Opportunity_output = sf.bulk.Opportunity.query("SELECT Id, AccountId, StageName, CloseDate, Importe_Sin_IGV__c FROM Opportunity WHERE StageName = 'Orden/Contrato Recepcionado'")
-TM_Opportunity_bought = pd.DataFrame(TM_Opportunity_output, columns=['Id', 'AccountId', 'StageName', 'CloseDate', 'Importe_Sin_IGV__c'])
+ob_Opportunity_output = sf.bulk.Opportunity.query("SELECT Id, AccountId, StageName, CloseDate, Importe_Sin_IGV__c FROM Opportunity WHERE StageName = 'Orden/Contrato Recepcionado'")
+ob_Opportunity_bought = pd.DataFrame(ob_Opportunity_output, columns=['Id', 'AccountId', 'StageName', 'CloseDate', 'Importe_Sin_IGV__c'])
 
 # Calculating opportunities data
-df_oportunidad_Id = TM_Opportunity_bought.query("StageName == 'Orden/Contrato Recepcionado'").groupby('AccountId').agg(Id=('Id', 'first'), last_closedate=('CloseDate', 'max')).reset_index()
+df_oportunidad_Id = ob_Opportunity_bought.query("StageName == 'Orden/Contrato Recepcionado'").groupby('AccountId').agg(Id=('Id', 'first'), last_closedate=('CloseDate', 'max')).reset_index()
 df_oportunidad_Id_last365 = df_oportunidad_Id.query("JULIANDAY(DATE('now')) - JULIANDAY(last_closedate) <= 365")
 
-df_oportunidad_Id_last365_amount = pd.merge(df_oportunidad_Id_last365, TM_Opportunity_bought, on='Id', how='left')
+df_oportunidad_Id_last365_amount = pd.merge(df_oportunidad_Id_last365, ob_Opportunity_bought, on='Id', how='left')
 
 # Selecting accounts with closed opportunities in the last 2 years
-df_oportunidad_accounts_last3years = TM_Opportunity_bought.query("StageName == 'Orden/Contrato Recepcionado' and JULIANDAY(DATE('now')) - JULIANDAY(CloseDate) <= 730")
+df_oportunidad_accounts_last3years = ob_Opportunity_bought.query("StageName == 'Orden/Contrato Recepcionado' and JULIANDAY(DATE('now')) - JULIANDAY(CloseDate) <= 730")
 
 df_oportunidad_accounts_last3years_amount = df_oportunidad_accounts_last3years.groupby('AccountId')['Importe_Sin_IGV__c'].sum().reset_index(name='Importe_Sin_IGV__c')
 
 # Querying Subscription data from Salesforce
-TM_Suscripcion__c_output = sf.bulk.TM_Suscripcion__c.query("SELECT Id, Cuenta__c, Codigo_licencia__c, Version_de_compra__c, OC__c, Fecha_final_de_uso__c FROM TM_Suscripcion__c")
-TM_Suscripcion__c_bought = pd.DataFrame(TM_Suscripcion__c_output, columns=['Id', 'Cuenta__c', 'Codigo_licencia__c', 'Version_de_compra__c', 'OC__c', 'Fecha_final_de_uso__c'])
+ob_Suscripcion__c_output = sf.bulk.ob_Suscripcion__c.query("SELECT Id, Cuenta__c, Codigo_licencia__c, Version_de_compra__c, OC__c, Fecha_final_de_uso__c FROM ob_Suscripcion__c")
+ob_Suscripcion__c_bought = pd.DataFrame(ob_Suscripcion__c_output, columns=['Id', 'Cuenta__c', 'Codigo_licencia__c', 'Version_de_compra__c', 'OC__c', 'Fecha_final_de_uso__c'])
 
 # Counting distinct subscriptions per account
-df_TM_Suscripcion__c = TM_Suscripcion__c_bought.query("Cuenta__c != 'None'").groupby('Cuenta__c').agg(q_suscriptions=('Id', 'nunique')).reset_index()
+df_ob_Suscripcion__c = ob_Suscripcion__c_bought.query("Cuenta__c != 'None'").groupby('Cuenta__c').agg(q_suscriptions=('Id', 'nunique')).reset_index()
 
 # Getting unique account Ids
-df_account = TM_Account_bought[['Id']].drop_duplicates()
+df_account = ob_Account_bought[['Id']].drop_duplicates()
 
 # Merging dataframes for analysis
-df_cc = pd.merge(TM_Account_bought_0, df_case_account, left_on='Id', right_on='AccountId', how='left')
+df_cc = pd.merge(ob_Account_bought_0, df_case_account, left_on='Id', right_on='AccountId', how='left')
 df_cc = pd.merge(df_cc, df_soporte_account, left_on='Id', right_on='AccountId', how='left')
 df_cc = pd.merge(df_cc, df_oportunidad_accounts_last3years_amount, left_on='Id', right_on='AccountId', how='left')
-df_cc = pd.merge(df_cc, df_TM_Suscripcion__c, left_on='Id', right_on='Cuenta__c', how='left')
+df_cc = pd.merge(df_cc, df_ob_Suscripcion__c, left_on='Id', right_on='Cuenta__c', how='left')
 
 # Analyzing accounts with positive Importe_Sin_IGV__c
 df_cc_analytics = df_cc.query("Importe_Sin_IGV__c > 0")
