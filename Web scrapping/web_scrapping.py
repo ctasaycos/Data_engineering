@@ -7,12 +7,12 @@ import numpy as np
 from pandas import DataFrame
 import shutil
 
-# Keywords for different categories
-Al = ["ArcGIS", "Licencias", "Drones", "Visor_web", "GPS", "Licenciamiento", "PIX4D"]
-JJ = ["Imágenes", "Satelital", "Desarrollo", "Ortoimagen", "Mosaico", "BIM", "Imagenes", "Satélite", "Digital Globe", "Quickbird", "SPOT", "Building", "Modeling"]
-Ll = ["Sistemas", "Analisis", "Análisis", "Visualización", "Plataforma", "SuperGIS", "SuperMAP", "Catastro", "Map Info", "Map", "Autodesk", "Sistematización", "Analyst", "AutoCAD", "Civil 3D", "Revit", "Inventor", "Infraworks"]
-SL = ["GIS", "ENVI", "Teledetección", "Open", "Source", "Software libre", "PCI Geomatics", "Cartografia", "Geomatics", "SIG", "IDL", "Deep", "learning", "Geográfica", "Geomática", "Georeferencial", "Geoespacial", "Geodiseño"]
-AN = ["Servicios", "Consultoria", "Soporte", "Integración", "Integracion"]
+# Keywords for different categories and obfuscated keywords
+Al = ["a", "b", "dd", "c", "d", "e", "f"]
+JJ = ["a", "b", "dd", "c", "d", "e", "f"]
+Ll = ["a", "b", "dd", "c", "d", "e", "f"]
+SL = ["a", "b", "dd", "c", "d", "e", "f"]
+AN = ["a", "b", "dd", "c", "d", "e", "f"]
 
 # Function to check if the provided absolute path exists
 def check_path(prompt):
