@@ -67,7 +67,7 @@ select distinct dn_numb, Grouping from
                     when CA_SEGMENT = 'Pharma and Applied' and SEGMENT IN ('BioPharma','BioPharma Animal Health','CDMO','CRO','Pharma APAC') then 'Group2'
                 else 'Not_group'
                 END Grouping
-                from dwsa.cc_data a
+                from cc_data a
                 left join (select distinct dn_numb,
                            case 
                            when CA_Segment ='Global Biotech' and New_Account_Rank ='Not_Biotech' and ACCOUNT_RANK LIKE 'TOP1000' then 'Biotech Larger' 
@@ -119,7 +119,7 @@ select distinct dn_numb, Grouping
                                   when CA_FLAG<>'Y' and (Segment in ('Diagnostics'))
                                   then 'Group7'  
                                   end Grouping
-                                  from  dwsa.cc_data a
+                                  from  cc_data a
                                   left join 
                                       (select PARENT_DUNS_NUMBER, sum(USD_ILI_AMOUNT) USD_ILI_AMOUNT from  dwsa.cust_duns_invoice_data
                                       WHERE FISCAL_YEAR=2022 and DIVISION_GROUP not in ('Clinical Research Group','Pharma Services Group','BioProduction Group')
@@ -149,7 +149,7 @@ from
     FISCAL_MONTH_AS_DATE,SYSDATE,
     sum(usd_ili_amount) usd_ili_amount
     FROM 
-    dwsa.cust_duns_invoice_data  cust_duns
+    nvoice_data  cust_duns
     inner join (select distinct PARENT_DUNS_NUMBER from cc_data where CA_FLAG<>'Y') recognition on recognition.PARENT_DUNS_NUMBER=cust_duns.PARENT_DUNS_NUMBER
     where FISCAL_YEAR >= 2021 
     group by cust_duns.PARENT_DUNS_NUMBER,cust_duns.bt_division,cust_duns.bt_sub_division,FISCAL_MONTH_AS_DATE) a
@@ -175,7 +175,7 @@ from
     FISCAL_MONTH_AS_DATE,SYSDATE,
     sum(usd_ili_amount) usd_ili_amount
     FROM 
-    dwsa.cust_duns_invoice_data  cust_duns
+    invoice_data  cust_duns
     inner join (select distinct dn_numb from cc_data where CA_FLAG='Y' or dn_numb='148648665' ) recognition on recognition.dn_numb=cust_duns.dn_numb
     where FISCAL_YEAR >= 2021 
     group by cust_duns.dn_numb,cust_duns.bt_division,cust_duns.bt_sub_division,FISCAL_MONTH_AS_DATE) a
