@@ -1,3 +1,6 @@
+'''
+Automation of notifications to sales people for a relevant amount in the opportunity. Privacty information obfuscated!
+'''
 import pandas as pd
 from simple_salesforce import Salesforce
 import smtplib
