@@ -1,3 +1,7 @@
+'''
+Ecommerce company, using inhouse data analytics are looking to provide a dashboards where you can see the sales and orders by classification
+Because is a start up located in Brooklyn they dont have a database or datalake to use proper sql sintax, I was pushed to develop it in python, company use django.
+'''
 import pandas as pd
 import pandasql as ps
 import numpy as np
