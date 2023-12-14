@@ -1,3 +1,10 @@
+'''
+Web scrapping:
+This project had as objective take all the documents in pdfs and send this information to every sales analyst in the
+company, they have to create prospect which will be send to potential customers. For privacy I obfuscated some information
+of the company. 
+To avoid scrap irrelevant documents we determined some keywords.
+'''
 import os
 import PyPDF2
 from time import strftime
