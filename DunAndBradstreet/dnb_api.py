@@ -34,7 +34,7 @@ case when CITY_TRANSLATED is null then GEOCODED_CITY else CITY_TRANSLATED end ad
 CASE WHEN ADDRESS_1_TRANSLATED is null then STREET_ADDRESS else ADDRESS_1_TRANSLATED end streetAddressLine1,
 zip as postalCode,
 STATE as addressRegion
-from dwsa.GEOCODE_TRANSLATE_ACCOUNTS_BKP
+from  ddd_table
 where COUNTRY_SHORT  IN ('US') and ROWNUM <= 6
 union 
 select 
@@ -54,7 +54,7 @@ case when CITY_TRANSLATED is null then GEOCODED_CITY else CITY_TRANSLATED end ad
 CASE WHEN ADDRESS_1_TRANSLATED is null then STREET_ADDRESS else ADDRESS_1_TRANSLATED end streetAddressLine1,
 zip as postalCode,
 STATE as addressRegion
-from dwsa.GEOCODE_TRANSLATE_ACCOUNTS_BKP
+from  ddd_table
 where COUNTRY_SHORT  IN ('CN') and ROWNUM <= 5
 """
 df_GEOCODE_TRANSLATE_ACCOUNTS_BKP = pd.read_sql(query, con=ss)
