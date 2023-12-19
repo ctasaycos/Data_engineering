@@ -2,7 +2,7 @@
 AOP (Annual Objective Proposal)
 Here we are pulling data to generate our AOP for the corporate accounts based on segments, territories, divisions and so on.
 The logic was set up by the stakeholders (Finance Team)
-Some fields were obfuscated for privacy
+Some fields were obfuscated for privacy of the company
 */
 WITH data AS(SELECT level lvl
                        FROM dual
