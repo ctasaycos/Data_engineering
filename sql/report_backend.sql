@@ -15,13 +15,13 @@ DECLARE @TotalAmount DECIMAL(10,2)
 
 -- Loop to insert random data
 DECLARE @Counter INT = 1
-WHILE @Counter <= 120000 -- You can adjust the number of rows as needed
+WHILE @Counter <= 120000 
 BEGIN
-    -- Generate random data
+
     SET @ID = NEWID()
     SET @ORDERS =  FLOOR(RAND() * 10) + 1
-    SET @Started_date = DATEADD(DAY, -RAND() * 365, GETDATE()) -- Random date within the last year
-    SET @TotalAmount = RAND() * 10000 -- Random decimal between 0 and 10000
+    SET @Started_date = DATEADD(DAY, -RAND() * 365, GETDATE()) 
+    SET @TotalAmount = RAND() * 10000 
 
     -- Insert into the table
     INSERT INTO Tranzact_test.dbo.master (ID, ORDERS,Started_date, TotalAmount)
