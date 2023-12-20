@@ -1,7 +1,7 @@
 /*
 Backend job for a power bi report
 */
-create table [Tranzact_test].[dbo].[master] (
+create table [master] (
 ID varchar(50) PRIMARY KEY,
 ORDERS int,
 Started_date DATETIME,
@@ -24,7 +24,7 @@ BEGIN
     SET @TotalAmount = RAND() * 10000 
 
     -- Insert into the table
-    INSERT INTO Tranzact_test.dbo.master (ID, ORDERS,Started_date, TotalAmount)
+    INSERT INTO master (ID, ORDERS,Started_date, TotalAmount)
     VALUES (@ID,@ORDERS, @Started_date, @TotalAmount)
 
     -- Increment counter
@@ -37,4 +37,4 @@ ORDERS,
 year(cast(Started_date as Date)) Year_Started_date,
 TotalAmount,
 sum(TotalAmount) OVER(PARTITION BY ORDERS,year(cast(Started_date as Date))) sum_orders
-from [Tranzact_test].[dbo].[master];
+from [master];
