@@ -1,7 +1,7 @@
 '''
 ETL Pipeline from snowflake to S3
 Data source: Snowflake, S3 Buckets AWS
-Dinamically pull product, invoices, orders, customer data from some views in Snowflake, for each fiscal month.
+Dinamically pull product, invoices, orders, customer data from some views in Snowflake, for each fiscal month and push it to Oracle
 '''
 # Databricks notebook source
 dbutils.widgets.removeAll()
